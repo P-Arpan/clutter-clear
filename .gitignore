@@ -1,0 +1,8 @@
+**/tempCodeRunnerFile.python
+**/tempCodeRunnerFile.py
+
+#subfolders exculdes subcontents from vscode 
+.vscode/*
+!.vscode/settings.json
+change
+lib_testing
