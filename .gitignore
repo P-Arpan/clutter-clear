@@ -1,8 +1,14 @@
+Venv
+
+#coderunners
 **/tempCodeRunnerFile.python
 **/tempCodeRunnerFile.py
 
-#subfolders exculdes subcontents from vscode 
+#subfolders excludes subcontents from vscode 
 .vscode/*
 !.vscode/settings.json
+ocr_models/*
+
+#Trails->
 change
-lib_and_testing
+Libraries_&_testing
