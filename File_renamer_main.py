@@ -2,7 +2,7 @@
 import os
 import easyocr
 
-ocr=easyocr.Reader(lang_list=['en'],gpu=True,model_storage_directory=r"D:\1-CS\Practice_Proj\clutter clear\ocr_models",download_enabled=False)
+ocr=easyocr.Reader(lang_list=['en'],gpu=True,model_storage_directory=r"ocr_models",download_enabled=False)
 
 def extract(img_path: str)-> list:
     recognised=ocr.readtext(img_path)
