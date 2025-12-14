@@ -1,8 +1,9 @@
 #clear the clutter start date:20-10-25
+#v2 end date 15-12-25
 import os
 import easyocr
 
-ocr=easyocr.Reader(lang_list=['en'],gpu=True,model_storage_directory=r"ocr_models",download_enabled=False)
+ocr=easyocr.Reader(lang_list=['en'],gpu=True,model_storage_directory=r"ocr_models",download_enabled=True)
 
 def extract(img_path: str)-> list:
     """setup readtext()"""
@@ -48,16 +49,17 @@ def move_files(directory_path: str) -> None:
         notxt_img=0
         txt_img=0               #images containg text counter
         unconfirmed_img=0       #images on which ocr is doubtful
-        
+        text_path=directory_path+"\\Text\\"     #move img with text to 'Text' folder
+        unconfirmed_path=directory_path+"\\Unconfirmed\\"   #move img which is uncertain to 'Unconfimed' folder
+
         for entry in dir_entries:
             if entry.is_file() and (not entry.name.startswith(".")):
-                if check(extract(entry.path))==1:           
-                    text_path=directory_path+"\\Text\\"     #move text img to 'Text' folder
+                hastext=check(extract(entry.path))
+                if hastext==1:           
                     os.rename(entry.path,text_path+entry.name)                  
                     txt_img+=1
                     print(f"{entry.name} contains text")                             
-                elif check(extract(entry.path))==2:
-                    unconfirmed_path=directory_path+"\\Unconfirmed\\"   #move text img to 'Unconfimed'
+                elif hastext==2:
                     os.rename(entry.path,unconfirmed_path+entry.name)
                     unconfirmed_img+=1
                     print(f"{entry.name} might contain text")
@@ -105,8 +107,10 @@ def run() -> None:
             else:
                 print("\n-----CLUTTER CLEARER RE-INITIALISED-----")        
             print("Current Path:",os.getcwd())
-            directory_path=input("Enter absolute path for target directory:")
-            
+            directory_path=input("Enter absolute path for target directory with images:")
+
+            #TODO: if directory contains something other than images, program breaks
+
             if len(directory_path)==0:
                 print("\nNo path provided. Please Try again.")
                 print("To exit write 'exit' ")
@@ -124,9 +128,11 @@ def run() -> None:
             print(f"Directory: '{directory_path}' not found.\nDetails:\n{F_err}")
             print(f"Please check if you entered absolute path '{directory_path}'")
             print(f"Please reenter the directory and try again.")
+            print("To exit write 'exit' ")
         except PermissionError as Perm_err:
             print(f"Permission not available for directory: '{directory_path}'\nDetails:\n{Perm_err}")
             print(f"You may need to provide permission.")
+            print("To exit write 'exit' ")
         finally:
             restarted+=1 #keeping count of restarts
         
