@@ -2,8 +2,11 @@
 #v2 end date 15-12-25
 import os
 import easyocr
+import torch
 
-ocr=easyocr.Reader(lang_list=['en'],gpu=True,model_storage_directory=r"ocr_models",download_enabled=True)
+script_dir=os.path.dirname(os.path.abspath(__file__))  #directory containing this script
+use_gpu = torch.cuda.is_available()  #has cpu or gpu?
+ocr=easyocr.Reader(lang_list=['en'],gpu=use_gpu,model_storage_directory=os.path.join(script_dir,"ocr_models"),download_enabled=True)
 
 def extract(img_path: str)-> list:
     """setup readtext()"""
@@ -87,16 +90,13 @@ def path_cleaner(directory_path:str)->str:
 
 def dir_creator(directory_path:str)->None:
     """Creates directory for images with images having text and unconfirmed images"""
-    path_holder=os.getcwd()     #storing original path
-    os.chdir(directory_path)
     if not os.path.exists(directory_path+"\\Text"):
         os.mkdir(directory_path+"\\Text") #creates a folder to store text
         print("Directory 'Text' created successfully")
     if not os.path.exists(directory_path+"\\Unconfirmed"):
         os.mkdir(directory_path+"\\Unconfirmed") #creates a folder to store text
         print("Directory 'Unconfirmed' created successfully")
-    os.chdir(path_holder)       #coming back to original path
-
+        
 def run() -> None:
     directory_path="<Target Directory Path>"      
     restarted=1
